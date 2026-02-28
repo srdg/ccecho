@@ -25,7 +25,6 @@ int main()
     // Run server in a separate thread
     std::thread serverThread(&Server::Start, &server);
 
-    std::cout << "Press any key to stop the server...\n";
     std::cin.get();
 
     server.Stop();
