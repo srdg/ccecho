@@ -55,7 +55,7 @@ public:
             return false;
         }
 
-        // Listen for incoming connections (TCP only)
+        // Behavior differs for TCP and UDP
         if (_proto == Protocol::TCP) {
             if (listen(_serverSocket, SOMAXCONN) == SOCKET_ERROR) {
                 std::cerr << "Listen failed: " << WSAGetLastError() << std::endl;
@@ -63,7 +63,7 @@ public:
                 return false;
             }
 
-            std::cout << "Server listening on " << _ip << ":" << _port << std::endl;
+            std::cout << "Server listening on " << _ip << ":" << _port << " (TCP)" << std::endl;
 
             _running = true;
 
@@ -89,6 +89,35 @@ public:
                 // Create a thread to handle this client
                 std::thread clientThread(&Server::HandleClient, this, clientSocket, std::string(clientIP), ntohs(clientAddr.sin_port));
                 clientThread.detach();
+            }
+        } else if (_proto == Protocol::UDP) {
+            std::cout << "Server listening on " << _ip << ":" << _port << " (UDP)" << std::endl;
+            _running = true;
+
+            const int BUFFER_SIZE = 1024;
+            char buffer[BUFFER_SIZE];
+            while (_running) {
+                sockaddr_in clientAddr;
+                int clientAddrLen = sizeof(clientAddr);
+
+                int recvSize = recvfrom(_serverSocket, buffer, BUFFER_SIZE, 0,
+                                        (sockaddr*)&clientAddr, &clientAddrLen);
+                if (recvSize == SOCKET_ERROR) {
+                    if (_running) {
+                        std::cerr << "recvfrom failed: " << WSAGetLastError() << std::endl;
+                    }
+                    break;
+                }
+                if (recvSize > 0) {
+                    // Echo back to sender
+                    buffer[recvSize < BUFFER_SIZE ? recvSize : BUFFER_SIZE-1] = '\0';
+                    int sent = sendto(_serverSocket, buffer, recvSize, 0,
+                                      (sockaddr*)&clientAddr, clientAddrLen);
+                    if (sent == SOCKET_ERROR) {
+                        std::cerr << "sendto failed: " << WSAGetLastError() << std::endl;
+                        break;
+                    }
+                }
             }
         }
 

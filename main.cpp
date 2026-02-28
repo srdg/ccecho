@@ -7,10 +7,18 @@
 
 #pragma comment(lib, "ws2_32.lib")
 
-int main()
+int main(int argc, char* argv[])
 {
     WSADATA wsaData;
     int iResult;
+
+    // Parse command-line arguments for UDP flag
+    bool useUdp = false;
+    for (int i = 1; i < argc; ++i) {
+        if (strcmp(argv[i], "-u") == 0 || strcmp(argv[i], "--udp") == 0) {
+            useUdp = true;
+        }
+    }
 
     // Initialize Winsock
     iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
@@ -19,8 +27,11 @@ int main()
         return 1;
     }
 
-    // Create and start the server on port 7 with TCP
-    Server server("127.0.0.1");  // Default port is 7, default protocol is TCP
+    Protocol proto = useUdp ? Protocol::UDP : Protocol::TCP;
+    std::cout << "Starting server with protocol: " << (useUdp ? "UDP" : "TCP") << std::endl;
+
+    // Create and start the server on port 7
+    Server server("127.0.0.1", 7, proto);
     
     // Run server in a separate thread
     std::thread serverThread(&Server::Start, &server);
