@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <thread>
+#include <vector>
+#include <mutex>
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -15,7 +18,7 @@ class Server {
 
 public:
     Server(const std::string& iIp = "127.0.0.1", unsigned int iPort = 7, Protocol iProtocol = Protocol::TCP)
-        : _ip(iIp), _port(iPort), _proto(iProtocol), _serverSocket(INVALID_SOCKET), _clientSocket(INVALID_SOCKET) {
+        : _ip(iIp), _port(iPort), _proto(iProtocol), _serverSocket(INVALID_SOCKET), _running(false) {
         std::cout << "Initializing server on " << _ip << ":" << _port << "..." << std::endl;
     }
 
@@ -62,43 +65,84 @@ public:
 
             std::cout << "Server listening on " << _ip << ":" << _port << std::endl;
 
-            // Accept a connection
-            sockaddr_in clientAddr;
-            int clientAddrLen = sizeof(clientAddr);
+            _running = true;
 
-            _clientSocket = accept(_serverSocket, (sockaddr*)&clientAddr, &clientAddrLen);
-            if (_clientSocket == INVALID_SOCKET) {
-                std::cerr << "Accept failed: " << WSAGetLastError() << std::endl;
-                closesocket(_serverSocket);
-                return false;
+            // Accept connections in a loop
+            while (_running) {
+                sockaddr_in clientAddr;
+                int clientAddrLen = sizeof(clientAddr);
+
+                SOCKET clientSocket = accept(_serverSocket, (sockaddr*)&clientAddr, &clientAddrLen);
+                if (clientSocket == INVALID_SOCKET) {
+                    if (_running) {
+                        std::cerr << "Accept failed: " << WSAGetLastError() << std::endl;
+                    }
+                    break;
+                }
+
+                // Get client IP address
+                char clientIP[INET_ADDRSTRLEN];
+                inet_ntop(AF_INET, &clientAddr.sin_addr, clientIP, INET_ADDRSTRLEN);
+
+                std::cout << "Connection accepted from " << clientIP << ":" << ntohs(clientAddr.sin_port) << std::endl;
+
+                // Create a thread to handle this client
+                std::thread clientThread(&Server::HandleClient, this, clientSocket, std::string(clientIP), ntohs(clientAddr.sin_port));
+                clientThread.detach();
             }
-
-            // Get client IP address
-            char clientIP[INET_ADDRSTRLEN];
-            inet_ntop(AF_INET, &clientAddr.sin_addr, clientIP, INET_ADDRSTRLEN);
-
-            std::cout << "Connection accepted from " << clientIP << ":" << ntohs(clientAddr.sin_port) << std::endl;
         }
 
         return true;
     }
 
-    
-    void Shutdown() {
-        if (_clientSocket != INVALID_SOCKET) {
-            closesocket(_clientSocket);
-            _clientSocket = INVALID_SOCKET;
-        }
+    void Stop() {
+        _running = false;
         if (_serverSocket != INVALID_SOCKET) {
             closesocket(_serverSocket);
             _serverSocket = INVALID_SOCKET;
         }
     }
 
+    void Shutdown() {
+        Stop();
+    }
+
 private:
+    void HandleClient(SOCKET clientSocket, const std::string& clientIP, unsigned int clientPort) {
+        const int BUFFER_SIZE = 1024;
+        char buffer[BUFFER_SIZE];
+
+        std::cout << "Handling client " << clientIP << ":" << clientPort << std::endl;
+
+        // Simple echo loop - receive and send back
+        while (_running) {
+            int recvSize = recv(clientSocket, buffer, BUFFER_SIZE - 1, 0);
+            
+            if (recvSize == SOCKET_ERROR) {
+                std::cerr << "Recv failed for " << clientIP << ":" << clientPort << std::endl;
+                break;
+            }
+
+            if (recvSize == 0) {
+                std::cout << "Client " << clientIP << ":" << clientPort << " disconnected" << std::endl;
+                break;
+            }
+
+            buffer[recvSize] = '\0';
+
+            // Echo back to client
+            if (send(clientSocket, buffer, recvSize, 0) == SOCKET_ERROR) {
+                std::cerr << "Send failed for " << clientIP << ":" << clientPort << std::endl;
+                break;
+            }
+        }
+
+        closesocket(clientSocket);
+    }
+
     std::string _ip;
     unsigned int _port = 7;
     Protocol _proto;
     SOCKET _serverSocket;
-    SOCKET _clientSocket;
+    bool _running;
 };
