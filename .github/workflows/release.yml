@@ -20,11 +20,7 @@ jobs:
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-
-  upload:
-    runs-on: windows-latest
-    needs: build
-    steps:
+    
     - name: Upload
       uses: actions/upload-artifact@v4
       with:
