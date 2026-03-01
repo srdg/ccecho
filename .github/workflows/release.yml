@@ -21,17 +21,8 @@ jobs:
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    - name: Create Release
-      uses: actions/create-release@v1
-      id: create_release
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      if: github.ref_type == 'tag'
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref_name }}
-        draft: false
-        prerelease: false
-
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      with:
-        path: ${{github.workspace}}/.bin/Release/ccecho.exe
-        name: ccecho-${{ github.ref_name }}.exe
+        files: ${{github.workspace}}/.bin/${{env.BUILD_TYPE}}/ccecho-${{ github.ref }}.exe
