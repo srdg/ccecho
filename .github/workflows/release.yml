@@ -43,17 +43,22 @@ jobs:
       with:
          name: ccecho-${{github.ref_name}}.exe
          run-id: upload_server
+         path: bin
+    
+    - name: Display artifactory
+      run: ls -R bin
+    
 
-    - name: Create Release
-      uses: "marvinpinto/action-automatic-releases@latest"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        automatic_release_tag: "latest"
-        files: |
-            ccecho-${{github.ref_name}}.exe
-        title: |
-            Automated release based of echo server ${{github.ref_name}}.
-        prerelease: true
+    # - name: Create Release
+    #   uses: "marvinpinto/action-automatic-releases@latest"
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+    #     automatic_release_tag: "latest"
+    #     files: |
+    #         ccecho-${{github.ref_name}}.exe
+    #     title: |
+    #         Automated release based of echo server ${{github.ref_name}}.
+    #     prerelease: true
     
