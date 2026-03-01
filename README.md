@@ -6,6 +6,9 @@ A multi-threaded echo server built with C++ and Windows Sockets (Winsock2), supp
 
 This project implements a concurrent echo server that listens on port 7 and accepts multiple client connections simultaneously. Each TCP client connection is handled in a separate thread, allowing the server to echo data from multiple clients independently. UDP traffic is processed in a single loop and echoed back to the sender.
 
+[![CMake Multi-Platform Build](https://github.com/srdg/ccecho/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/srdg/ccecho/actions/workflows/c-cpp.yml) 
+[![Release](https://github.com/srdg/ccecho/actions/workflows/release.yml/badge.svg)](https://github.com/srdg/ccecho/actions/workflows/release.yml)
+
 ## Features
 
 - **Protocol Support**: TCP by default, UDP optionally via command-line `-u` or `--udp` flag
