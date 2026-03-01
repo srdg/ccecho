@@ -43,6 +43,10 @@ jobs:
 
     - name: Create Release
       uses: ncipollo/release-action@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        permissions:
+            write
       with:
         artifacts: ${{github.workspace}}\ccecho-${{github.ref_name}}.exe
         body: |
