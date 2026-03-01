@@ -55,7 +55,7 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         body: |
-            Automated release based of echo server ${{github.ref_name}}.
+            Automated release of echoserver `${{github.ref_name}}`.
         artifacts: "bin/ccecho.*"
         prerelease: true
         tag: ${{github.ref}}
