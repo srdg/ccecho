@@ -21,14 +21,11 @@ jobs:
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-  release:
-    needs: build
+  upload:
     runs-on: windows-latest
     steps:
-    - uses:  actions/download-artifact@v4
-    - name: Publish
-      uses: softprops/action-gh-release@v2
+    - name: Upload
+      uses: actions/upload-artifact@v4
       with:
-        file:${{github.workspace}}\.bin\${{env.BUILD_TYPE}}\ccecho.exe
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name: ccecho-$${{github.ref}}.exe
+        path: ${{github.workspace}}\.bin\${{env.BUILD_TYPE}}\ccecho.exe
