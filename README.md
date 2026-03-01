@@ -1,4 +1,4 @@
-# Echo Server
+# Coding Challenges - Echo Server (ccecho)
 
 A multi-threaded echo server built with C++ and Windows Sockets (Winsock2), supporting both TCP and UDP, built as part of [Coding Challenges](https://codingchallenges.fyi/challenges/challenge-echo) series.
 
