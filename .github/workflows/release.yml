@@ -28,9 +28,21 @@ jobs:
         path: ${{github.workspace}}\.bin\${{env.BUILD_TYPE}}\ccecho.exe
   
   Release:
-    runs-on: windows-latest
+    name: Create GitHub Release
     needs: Build-and-upload
+    runs-on: windows-latest
+    env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-    - uses: skx/github-action-publish-binaries@master
+    - name: Download
+      uses: actions/download-artifact@v4
       with:
-        args: ccecho-$${{github.ref_name}}.exe
+         name: ccecho-${{github.ref_name}}.exe
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ccecho-${{github.ref_name}}.exe
+        body: |
+            Automated release based of echo server ${{github.ref_name}}.
+    
