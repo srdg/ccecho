@@ -1,5 +1,7 @@
+#if defined(_WIN32) || defined(_WIN64)
 #include <WinSock2.h>
 #include <WS2tcpip.h>
+#endif
 #include <stdio.h>
 #include <iostream>
 #include <thread>
