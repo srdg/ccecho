@@ -44,11 +44,14 @@ jobs:
          run-id: upload_server
 
     - name: Create Release
-      uses: ncipollo/release-action@v1
+      uses: "marvinpinto/action-automatic-releases@latest"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        artifacts: ccecho-${{github.ref_name}}.exe
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        automatic_release_tag: "latest"
+        files: |
+            ccecho-${{github.ref_name}}.exe
         body: |
             Automated release based of echo server ${{github.ref_name}}.
     
