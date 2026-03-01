@@ -9,7 +9,7 @@ env:
   BUILD_TYPE: Release
 
 jobs:
-  build:
+  Build-and-upload:
     runs-on: windows-latest
     steps:
     - name: Checkout
@@ -26,3 +26,11 @@ jobs:
       with:
         name: ccecho-$${{github.ref_name}}.exe
         path: ${{github.workspace}}\.bin\${{env.BUILD_TYPE}}\ccecho.exe
+  
+  Release:
+    runs-on: windows-latest
+    needs: Build-and-upload
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        artifacts: ccecho-$${{github.ref_name}}.exe
