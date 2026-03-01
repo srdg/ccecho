@@ -35,11 +35,12 @@ jobs:
         draft: false
         prerelease: false
 
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
       with:
-        path: ${{github.workspace}}/.bin/ccecho.exe
-        name: ccecho-${{ github.ref_name }}.exe
-        content_type: application/octet-stream
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ${{github.workspace}}\.bin\${{env.BUILD_TYPE}}\ccecho.exe
+        asset_name: ccecho-${{github.ref}}.exe
+        tag: ${{ github.ref }}
+        overwrite: true
+        body: "Releasing echo server ${{github.ref}}"
