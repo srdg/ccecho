@@ -25,8 +25,9 @@ jobs:
     needs: build
     runs-on: windows-latest
     steps:
+    - uses:  actions/download-artifact@v4
     - name: Publish
-      uses:  actions/download-artifact@v4
+      uses: softprops/action-gh-release@v2
       with:
         file:${{github.workspace}}\.bin\${{env.BUILD_TYPE}}\ccecho.exe
       env:
