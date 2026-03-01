@@ -25,7 +25,7 @@ jobs:
       uses: actions/upload-artifact@v4
       id: upload_server
       with:
-        name: ccecho-$${{github.ref_name}}.exe
+        name: ccecho-${{github.ref_name}}.exe
         path: ${{github.workspace}}\.bin\${{env.BUILD_TYPE}}\ccecho.exe
   
   Release:
