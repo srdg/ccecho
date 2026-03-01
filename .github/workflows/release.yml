@@ -40,7 +40,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{github.workspace}}/.bin/ccecho.exe
-        asset_name: ccecho-${{ github.ref_name }}.exe
-        asset_content_type: application/octet-stream
+        path: ${{github.workspace}}/.bin/ccecho.exe
+        name: ccecho-${{ github.ref_name }}.exe
+        content_type: application/octet-stream
