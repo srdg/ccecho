@@ -28,6 +28,6 @@ jobs:
     - name: Publish
       uses:  actions/download-artifact@v4
       with:
-        files:${{github.workspace}}\.bin\${{env.BUILD_TYPE}}\ccecho.exe
+        file:${{github.workspace}}\.bin\${{env.BUILD_TYPE}}\ccecho.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
