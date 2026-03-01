@@ -32,5 +32,6 @@ jobs:
     needs: Build-and-upload
     steps:
     - uses: actions/checkout@v4
+    - uses: ncipollo/release-action@v1
       with:
         artifacts: ccecho-$${{github.ref_name}}.exe
