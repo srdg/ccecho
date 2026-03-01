@@ -33,7 +33,5 @@ jobs:
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{github.workspace}}/.bin/Release/ccecho.exe
-        asset_name: ccecho-${{ github.ref_name }}.exe
-        asset_content_type: application/octet-stream
+        path: ${{github.workspace}}/.bin/Release/ccecho.exe
+        name: ccecho-${{ github.ref_name }}.exe
