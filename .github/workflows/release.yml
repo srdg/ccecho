@@ -31,7 +31,6 @@ jobs:
     runs-on: windows-latest
     needs: Build-and-upload
     steps:
-    - uses: actions/checkout@v4
-    - uses: ncipollo/release-action@v1
+    - uses: skx/github-action-publish-binaries@master
       with:
-        artifacts: ccecho-$${{github.ref_name}}.exe
+        args: ccecho-$${{github.ref_name}}.exe
