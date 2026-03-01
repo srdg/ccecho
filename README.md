@@ -1,10 +1,10 @@
 # Echo Server
 
-A multi-threaded echo server built with C++ and Windows Sockets (Winsock2), supporting both TCP and UDP.
+A multi-threaded echo server built with C++ and Windows Sockets (Winsock2), supporting both TCP and UDP, built as part of [Coding Challenges](https://codingchallenges.fyi/challenges/challenge-echo) series.
 
 ## Overview
 
-This project implements a concurrent echo server that listens on port 7 (configurable) and accepts multiple client connections simultaneously. Each TCP client connection is handled in a separate thread, allowing the server to echo data from multiple clients independently. UDP traffic is processed in a single loop and echoed back to the sender.
+This project implements a concurrent echo server that listens on port 7 and accepts multiple client connections simultaneously. Each TCP client connection is handled in a separate thread, allowing the server to echo data from multiple clients independently. UDP traffic is processed in a single loop and echoed back to the sender.
 
 ## Features
 
@@ -15,7 +15,7 @@ This project implements a concurrent echo server that listens on port 7 (configu
 - **Graceful Shutdown**: Cleanly stops the server on user command
 - **Error Handling**: Comprehensive error reporting for socket operations
 
-## Requirements
+## Tested with
 
 - **Windows OS** (uses Winsock2)
 - **C++11 or later** (for threading support)
