@@ -10,6 +10,7 @@ env:
 
 jobs:
   Build-and-upload:
+    name: Build and Upload
     runs-on: windows-latest
     steps:
     - name: Checkout
@@ -52,6 +53,7 @@ jobs:
         automatic_release_tag: "latest"
         files: |
             ccecho-${{github.ref_name}}.exe
-        body: |
+        title: |
             Automated release based of echo server ${{github.ref_name}}.
+        prerelease: true
     
