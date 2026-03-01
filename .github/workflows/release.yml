@@ -48,7 +48,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        artifacts: ${{github.workspace}}\ccecho-${{github.ref_name}}.exe
+        artifacts: ccecho-${{github.ref_name}}.exe
         body: |
             Automated release based of echo server ${{github.ref_name}}.
     
