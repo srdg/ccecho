@@ -49,16 +49,14 @@ jobs:
       run: ls -R bin
     
 
-    # - name: Create Release
-    #   uses: "marvinpinto/action-automatic-releases@latest"
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     repo_token: ${{ secrets.GITHUB_TOKEN }}
-    #     automatic_release_tag: "latest"
-    #     files: |
-    #         ccecho-${{github.ref_name}}.exe
-    #     title: |
-    #         Automated release based of echo server ${{github.ref_name}}.
-    #     prerelease: true
+    - name: Create Release
+      uses: elgohr/Github-Release-Action@v5
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        title: |
+            Automated release based of echo server ${{github.ref_name}}.
+        workdir: bin
+        prerelease: true
+        tag: ${{github.ref}}
     
