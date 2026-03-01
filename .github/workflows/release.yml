@@ -42,9 +42,9 @@ jobs:
          run-id: upload_server
 
     - name: Create Release
-      uses: softprops/action-gh-release@v1
+      uses: ncipollo/release-action@v1
       with:
-        files: ccecho-${{github.ref_name}}.exe
+        artifacts: ${{github.workspace}}\ccecho-${{github.ref_name}}.exe
         body: |
             Automated release based of echo server ${{github.ref_name}}.
     
